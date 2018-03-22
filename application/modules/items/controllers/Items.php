@@ -21,12 +21,12 @@ class Items extends MX_Controller {
 								'theme' => 'assets/backview/css/themes/all-themes.css',
 							]
 					];
-		$this->incHead = $this->load->view('includes/head', $this->head, TRUE);
+		$this->incHead = $this->load->view('includes/backview/head', $this->head, TRUE);
 
 		$this->nav = [
 						'title' => 'Jobcosting'
 					];
-		$this->incNav = $this->load->view('includes/nav', $this->nav, TRUE);
+		$this->incNav = $this->load->view('includes/backview/nav', $this->nav, TRUE);
 
 		$this->menu = [
 						'session' => 
@@ -41,7 +41,7 @@ class Items extends MX_Controller {
 								'bisa_buat_user' => '1'
 							],
 					];
-		$this->incMenu = $this->load->view('includes/menu', $this->menu, TRUE);
+		$this->incMenu = $this->load->view('includes/backview/menu', $this->menu, TRUE);
 
 		$this->footer = [
 							'scripts' =>
@@ -63,7 +63,7 @@ class Items extends MX_Controller {
 									'sidebar' => 'assets/backview/js/demo.js'
 								],
 					];
-		$this->incFooter = $this->load->view('includes/footer', $this->footer, TRUE);
+		$this->incFooter = $this->load->view('includes/backview/footer', $this->footer, TRUE);
 	}
 
 	public function index()
@@ -77,8 +77,18 @@ class Items extends MX_Controller {
 		$data['nav'] = $this->incNav;
 		$data['menu'] = $this->incMenu;
 		$data['footer'] = $this->incFooter;
-		$data['akun'] = $this->db->select('id, nama, kode')->from('akun')->get()->result_array();
 		$this->load->view('form', $data);
+	}
+
+	public function accounts()
+	{
+		$response['data'] = $this->db->select('id, nama, kode')->from('akun')->get()->result_array();
+		$response['code'] = 200;
+		$response['status'] = 'success';
+		$response['message'] = 'All accounts data have been successfully fetched.';
+		$response['description'] = 'All accounts data have been successfully fetched.';
+		$response = json_encode($response);
+		echo $response;
 	}
 
 	public function add()

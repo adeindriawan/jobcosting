@@ -1,4 +1,6 @@
 $(function () {
+    var base_url = $('body').data('base-url');
+
     //CKEditor
     if ($('textarea#ckeditor').length) {
     	CKEDITOR.replace('ckeditor');
@@ -26,6 +28,33 @@ $(function () {
 
         $('#akun-item').selectpicker({
             dropupAuto: false
+        });
+
+        $.get(base_url + 'items/accounts', function(data, status) {
+            /*optional stuff to do after success */
+            if (status == 'success') {
+                var response = $.parseJSON(data);
+                var response_status = response['status'];
+                var response_data = response['data'];
+                if (response_status == 'success') {
+                    var options = '';
+                    var iter = 0;
+                    $.each(response_data, function(i, v) {
+                        /* iterate through array or object */
+                        var kode = (v.kode != null) ? v.kode : '[Tidak ada kode]' ;
+                        options += '<option value="'+ v.id +'">'+ v.nama + ' | ' + kode +'</option>';
+                        iter++;
+                        if (response_data.length == iter) {
+                            $('#akun-item').append(options);
+                            $('#akun-item').selectpicker('refresh');
+                        };
+                    });
+                } else{
+                    alert('Terjadi error dalam mengambil data akun! Kode: 02');
+                };
+            } else {
+                alert('Terjadi error dalam mengambil data akun! Kode: 01');
+            };
         });
     };
 

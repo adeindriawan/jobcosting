@@ -83,10 +83,6 @@
 						                <label for="name">Akun Item</label>
 						                <select class="form-control show-tick" name="akun" data-live-search="true" id="akun-item" required>
 		                                    <option selected="" value="">Pilih akun item</option>
-		                                    <?php foreach ($akun as $value) { 
-		                                    	$kode = ($value['kode'] == NULL) ? '[Tidak ada kode]' : $value['kode']; ?>
-		                                    	<option value="<?php echo $value['id'] ?>"><?php echo $value['nama'] . ' | ' . $kode; ?></option>
-		                                    <?php } ?>
 		                                </select>
 						            </div>
 	                            </div>

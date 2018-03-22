@@ -21,12 +21,12 @@ class Jobs extends CI_Controller {
 								'theme' => 'assets/backview/css/themes/all-themes.css',
 							]
 					];
-		$this->incHead = $this->load->view('includes/head', $this->head, TRUE);
+		$this->incHead = $this->load->view('includes/backview/head', $this->head, TRUE);
 
 		$this->nav = [
 						'title' => 'Jobcosting'
 					];
-		$this->incNav = $this->load->view('includes/nav', $this->nav, TRUE);
+		$this->incNav = $this->load->view('includes/backview/nav', $this->nav, TRUE);
 
 		$this->menu = [
 						'session' => 
@@ -41,7 +41,7 @@ class Jobs extends CI_Controller {
 								'bisa_buat_user' => '1'
 							],
 					];
-		$this->incMenu = $this->load->view('includes/menu', $this->menu, TRUE);
+		$this->incMenu = $this->load->view('includes/backview/menu', $this->menu, TRUE);
 
 		$this->footer = [
 							'scripts' =>
@@ -63,7 +63,7 @@ class Jobs extends CI_Controller {
 									'sidebar' => 'assets/backview/js/demo.js'
 								],
 					];
-		$this->incFooter = $this->load->view('includes/footer', $this->footer, TRUE);
+		$this->incFooter = $this->load->view('includes/backview/footer', $this->footer, TRUE);
 	}
 
 	public function index()
