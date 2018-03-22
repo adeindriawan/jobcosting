@@ -115,9 +115,37 @@ class Jobs extends CI_Controller {
 
 	public function get()
 	{
-		$query = $this->db->get('pekerjaan')->result_array();
-		$query = json_encode($query);
-		echo $query;
+		if ($this->input->get('length') == -1) {
+			$length = NULL;
+			$start = NULL;
+		} else {
+			$length = $this->input->get('length');
+			$start = $this->input->get('start');
+		}
+		if ($this->input->get('search[value]') == '') {
+			$search = '';
+		} else {
+			$search = $this->input->get('search[value]');
+		}
+
+		$this->db->select('id');
+		$this->db->from('pekerjaan');
+		$response['recordsTotal'] = $this->db->count_all_results();
+
+		$this->db->select('id');
+		$this->db->from('pekerjaan');
+		if ($search != '') {
+			$this->db->like('pekerjaan.nama', $search, 'both');
+		}
+		$response['recordsFiltered'] = $this->db->count_all_results();
+		
+		$response['data'] = $this->db->get('pekerjaan')->result_array();
+		$response['code'] = 200;
+		$response['status'] = 'success';
+		$response['message'] = 'All items data have been successfully fetched.';
+		$response['description'] = 'All items data have been successfully fetched.';
+		$response = json_encode($response);
+		echo $response;
 	}
 
 }

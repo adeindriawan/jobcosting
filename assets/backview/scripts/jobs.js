@@ -17,39 +17,93 @@ $(function () {
 
     if ($('#tabel-pekerjaan').length) {
         var url = $('#tabel-pekerjaan').attr('data-url');
-        $.get(url, function(data) {
-            /*optional stuff to do after success */
-            var response = $.parseJSON(data);
-            var rows = '';
-            var iter = 0;
-            $.each(response, function(i, v) {
-                
-                /* iterate through array or object */
-                var btn_detail = '<button type="button" value="'+ v.id +'" class="btn btn-primary btn-circle waves-effect waves-circle waves-float btn-detail" data-toggle="tooltip" data-placement="top" title="Detail pekerjaan"><i class="material-icons">zoom_in</i></button>';
-                var btn_edit = '<button type="button" value="'+ v.id +'" class="btn btn-info btn-circle waves-effect waves-circle waves-float btn-edit" data-toggle="tooltip" data-placement="top" title="Edit pekerjaan"><i class="material-icons">mode_edit</i></button>';
-                var btn_delete = '<button type="button" value="'+ v.id +'" class="btn btn-danger btn-circle waves-effect waves-circle waves-float btn-delete" data-toggle="tooltip" data-placement="top" title="Hapus pekerjaan"><i class="material-icons">delete</i></button>';
-                
-                $('#tabel-pekerjaan tbody').html('');
-                rows += '<tr id="tr'+ v.id +'"><td>'+ v.nama +'</td><td>'+ v.deskripsi +'</td><td>'+ v.nominal +'</td><td>'+ btn_detail + btn_edit + btn_delete + '</td></tr>';
-                iter++;
-                if (response.length === iter) {
-                    $('#tabel-pekerjaan').append(rows);
-                    $('.btn-detail').click(function(event) { // callback dipanggil di sini
-                        var id = $(this).val();
-                        btnDetailClick(id);
-                    });
-                    $('.btn-edit').click(function(event) {
-                        /* Act on the event */
-                        var id = $(this).val();
-                        btnEditClick(id);
-                    });
-                    $('.btn-delete').click(function(event) {
-                        /* Act on the event */
-                        var id = $(this).val();
-                        btnDeleteClick(id);
-                    });
-                };
-            });
+
+        var tabel = $('#tabel-pekerjaan').DataTable({
+            dom: 'lfrtip',
+            processing: true,
+            serverSide: true,
+            lengthChange: true,
+            lengthMenu: [[10, 25, 50, -1], [10, 25, 50, 'All']],
+            ajax: {
+                'url': url,
+                'dataSrc': function(json) {
+                    var return_data = new Array();
+                    for(var i=0;i< json['data'].length; i++) {
+
+                        var btn_detail = '<button type="button" value="'+ json['data'][i].id +'" data-name="'+ json['data'][i].nama +'" data-price="'+ json['data'][i].nominal +'" data-description="'+ json['data'][i].deskripsi +'" class="btn btn-primary btn-circle waves-effect waves-circle waves-float btn-detail" data-toggle="tooltip" data-placement="top" title="Detail Job"><i class="material-icons">zoom_in</i></button>';
+                        var btn_edit = '<button type="button" value="'+ json['data'][i].id +'" class="btn btn-info btn-circle waves-effect waves-circle waves-float btn-edit" data-toggle="tooltip" data-placement="top" title="Edit Job"><i class="material-icons">mode_edit</i></button>';
+                        var btn_delete = '<button type="button" value="'+ json['data'][i].id +'" class="btn btn-danger btn-circle waves-effect waves-circle waves-float btn-delete" data-toggle="tooltip" data-placement="top" title="Hapus Job"><i class="material-icons">delete</i></button>';
+                        var btn_actions = btn_detail + btn_edit + btn_delete;
+                        var nominal = 'Rp' + json['data'][i].nominal.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+                        
+                        return_data.push({
+                          'nama': json['data'][i].nama,
+                          'deskripsi': json['data'][i].deskripsi,
+                          'nominal': nominal,
+                          'actions': btn_actions
+                        });
+                    }
+
+                    return return_data;
+                },
+            },
+            columns: [
+                {'data': 'nama'},
+                {'data': 'deskripsi'},
+                {'data': 'nominal'},
+                {'data': 'actions'}
+            ],
+            responsive: true,
+            initComplete: function() {
+                $('[data-toggle="tooltip"]').tooltip({
+                    container: 'body'
+                });
+                $('.btn-detail').click(function(event) { // callback dipanggil di sini
+                    var id = $(this).val();
+                    var name = $(this).data('name');
+                    var price = $(this).data('nominal');
+                    var description = $(this).data('description');
+                    var account = $(this).data('account');
+
+                    btnDetailClick(id, name, category, price, unit, description, account);
+                });
+                $('.btn-edit').click(function(event) {
+                    /* Act on the event */
+                    var id = $(this).val();
+                    btnEditClick(id);
+                });
+                $('.btn-delete').click(function(event) {
+                    /* Act on the event */
+                    var id = $(this).val();
+                    btnDeleteClick(id, tabel);
+                });
+            },
+            drawCallback: function() {
+                $('[data-toggle="tooltip"]').tooltip({
+                    container: 'body'
+                });
+                $('.btn-detail').click(function(event) { // callback dipanggil di sini
+                    var id = $(this).val();
+                    var name = $(this).data('name');
+                    var price = $(this).data('nominal');
+                    var description = $(this).data('description');
+                    var account = $(this).data('account');
+
+                    btnDetailClick(id, name, category, price, unit, description, account);
+                });
+                $('.btn-edit').click(function(event) {
+                    /* Act on the event */
+                    var id = $(this).val();
+                    var source_id = $(this).data('source-id');
+                    btnEditClick(id, source_id);
+                });
+                $('.btn-delete').click(function(event) {
+                    /* Act on the event */
+                    var id = $(this).val();
+                    var source_id = $(this).data('source-id');
+                    btnDeleteClick(id, source_id, table);
+                });
+            }
         });
     };
 });

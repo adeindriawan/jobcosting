@@ -139,7 +139,7 @@ class Items extends MX_Controller {
 		$this->db->select('id');
 		$this->db->from('item');
 		if ($search != '') {
-			$this->db->like('item.name', $search, 'both');
+			$this->db->like('item.nama', $search, 'both');
 		}
 		$response['recordsFiltered'] = $this->db->count_all_results();
 
