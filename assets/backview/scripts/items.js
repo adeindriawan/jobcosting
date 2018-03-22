@@ -50,10 +50,10 @@ $(function () {
                         };
                     });
                 } else{
-                    alert('Terjadi error dalam mengambil data akun! Kode: 02');
+                    alert('Terjadi error ketika mengambil data akun! Kode: 02');
                 };
             } else {
-                alert('Terjadi error dalam mengambil data akun! Kode: 01');
+                alert('Terjadi error ketika mengambil data akun! Kode: 01');
             };
         });
     };

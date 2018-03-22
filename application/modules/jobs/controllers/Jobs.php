@@ -77,31 +77,81 @@ class Jobs extends CI_Controller {
 		$data['nav'] = $this->incNav;
 		$data['menu'] = $this->incMenu;
 		$data['footer'] = $this->incFooter;
-		$data['bb'] = $this->db->select('*')->from('item')->where('jenis', 1)->get()->result_array();
-		$data['tkl'] = $this->db->select('*')->from('item')->where('jenis', 2)->get()->result_array();
-		$data['ovr'] = $this->db->select('*')->from('item')->where('jenis', 3)->get()->result_array();
 		$this->load->view('form', $data);
+	}
+
+	public function materials()
+	{
+		$response['data'] = $this->db->get_where('item', array('jenis' => 1))->result_array();
+		$response['code'] = 200;
+		$response['status'] = 'success';
+		$response['message'] = 'All raw materials data have been successfully fetched.';
+		$response['description'] = 'All raw materials data have been successfully fetched.';
+		$response = json_encode($response);
+		echo $response;
+	}
+
+	public function labors()
+	{
+		$response['data'] = $this->db->get_where('item', array('jenis' => 2))->result_array();
+		$response['code'] = 200;
+		$response['status'] = 'success';
+		$response['message'] = 'All labors data have been successfully fetched.';
+		$response['description'] = 'All labors data have been successfully fetched.';
+		$response = json_encode($response);
+		echo $response;
+	}
+
+	public function overheads()
+	{
+		$response['data'] = $this->db->get_where('item', array('jenis' => 3))->result_array();
+		$response['code'] = 200;
+		$response['status'] = 'success';
+		$response['message'] = 'All overheads data have been successfully fetched.';
+		$response['description'] = 'All overheads data have been successfully fetched.';
+		$response = json_encode($response);
+		echo $response;
 	}
 
 	public function add()
 	{
-		$data['nama'] = $this->input->post('nama', TRUE);
-		$data['deskripsi'] = $this->input->post('deskripsi', TRUE);
-		$data['nominal'] = $this->input->post('total', TRUE);
-		$boq = $this->input->post('boq', TRUE);
+		$this->form_validation->set_error_delimiters('', '');
+		$this->form_validation->set_rules('nama', 'Nama Pekerjaan', 'required|trim');
+		$this->form_validation->set_rules('total', 'Nominal Pekerjaan', 'required|trim');
 
-		$this->db->insert('pekerjaan', $data);
-		$idPekerjaan = $this->db->insert_id();
+		if ($this->form_validation->run() == FALSE) {
+			$response['data'] = '';
+			$response['code'] = 200;
+			$response['status'] = 'failed';
+			$response['message'] = 'An error occurred during validation.';
+			$response['description'] = 'An error occurred during validation.';
+			$response = json_encode($response);
+			echo $response;
+		} else {
+			$data['nama'] = $this->input->post('nama', TRUE);
+			$data['deskripsi'] = $this->input->post('deskripsi', TRUE);
+			$data['nominal'] = $this->input->post('total', TRUE);
+			$boq = $this->input->post('boq', TRUE);
 
-		$item['id_pekerjaan'] = $idPekerjaan;
-		foreach ($boq as $key => $value) {
-			$item['id_item'] = $value[0];
-			$item['qty_item'] = $value[1];
-			$item['nominal_item'] = $value[2];
-			$this->db->insert('item_pekerjaan', $item);
+			$this->db->insert('pekerjaan', $data);
+			$idPekerjaan = $this->db->insert_id();
+
+			$item['id_pekerjaan'] = $idPekerjaan;
+			foreach ($boq as $key => $value) {
+				$item['id_item'] = $value[0];
+				$item['qty_item'] = $value[1];
+				$item['nominal_item'] = $value[2];
+				$this->db->insert('item_pekerjaan', $item);
+			}
+
+			$response['data'] = '';
+			$response['code'] = 200;
+			$response['status'] = 'success';
+			$response['message'] = 'A new job has been successfully created.';
+			$response['description'] = 'A new job has been successfully created.';
+			$response = json_encode($response);
+			echo $response;
 		}
-
-		echo 'true';
 	}
 
 	public function table()

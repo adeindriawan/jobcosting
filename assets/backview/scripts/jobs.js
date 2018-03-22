@@ -1,4 +1,6 @@
 $(function () {
+    var base_url = $('body').data('base-url');
+
     //CKEditor
     if ($('textarea#ckeditor').length) {
     	CKEDITOR.replace('ckeditor');
@@ -9,6 +11,95 @@ $(function () {
         $('#form-tambah-pekerjaan').validate({
             ignore: [] // karena menggunakan bootstrap-select
         });
+
+        function getMaterials() {
+            return $.get(base_url + 'jobs/materials', function(data, status) {
+                /*optional stuff to do after success */
+                if (status == 'success') {
+                    var response = $.parseJSON(data);
+                    var response_status = response['status'];
+                    var response_data = response['data'];
+                    if (response_status == 'success') {
+                        var options = '<optgroup label="Bahan Baku">';
+                        var iter = 0;
+                        $.each(response_data, function(i, v) {
+                            /* iterate through array or object */
+                            options += '<option id="option'+ v.id +'" value="'+ v.id +'" harga="'+ v.harga +'">'+ v.nama + ' || ' + v.satuan +'</option>';
+                            iter++;
+                        });
+                        if (response_data.length == iter) {
+                            options += '</optgroup>';
+                            $('#item').append(options);
+                        };
+                    } else{
+                        alert('Terjadi error ketika mengambil data item! Kode: 02');
+                    };
+                } else{
+                    alert('Terjadi error ketika mengambil data item! Kode: 01');
+                };
+            }); 
+        }
+
+        function getLabors() {
+            return $.get(base_url + 'jobs/labors', function(data, status) {
+                /*optional stuff to do after success */
+                if (status == 'success') {
+                    var response = $.parseJSON(data);
+                    var response_status = response['status'];
+                    var response_data = response['data'];
+                    if (response_status == 'success') {
+                        var options = '<optgroup label="Tenaga Kerja Langsung">';
+                        var iter = 0;
+                        $.each(response_data, function(i, v) {
+                            /* iterate through array or object */
+                            options += '<option id="option'+ v.id +'" value="'+ v.id +'" harga="'+ v.harga +'">'+ v.nama + ' || ' + v.satuan +'</option>';
+                            iter++;
+                        });
+                        if (response_data.length == iter) {
+                            options += '</optgroup>';
+                            $('#item').append(options);
+                        };
+                    } else{
+                        alert('Terjadi error ketika mengambil data item! Kode: 02');
+                    };
+                } else{
+                    alert('Terjadi error ketika mengambil data item! Kode: 01');
+                };
+            });
+        }
+
+        function getOverheads() {
+            return $.get(base_url + 'jobs/overheads', function(data, status) {
+                /*optional stuff to do after success */
+                if (status == 'success') {
+                    var response = $.parseJSON(data);
+                    var response_status = response['status'];
+                    var response_data = response['data'];
+                    if (response_status == 'success') {
+                        var options = '<optgroup label="Overhead">';
+                        var iter = 0;
+                        $.each(response_data, function(i, v) {
+                            /* iterate through array or object */
+                            options += '<option id="option'+ v.id +'" value="'+ v.id +'" harga="'+ v.harga +'">'+ v.nama + ' || ' + v.satuan +'</option>';
+                            iter++;
+                        });
+                        if (response_data.length == iter) {
+                            options += '</optgroup>';
+                            $('#item').append(options);
+                        };
+                    } else{
+                        alert('Terjadi error ketika mengambil data item! Kode: 02');
+                    };
+                } else{
+                    alert('Terjadi error ketika mengambil data item! Kode: 01');
+                };
+            }); 
+        }
+
+        $.when(getMaterials(), getLabors(), getOverheads()).done(function() {
+            $('#item').selectpicker('refresh');
+        });
+        
 
         $('.daftar-item').selectpicker({
             dropupAuto: false
@@ -272,19 +363,21 @@ $('#tombol-tambah-pekerjaan').click(function(event) {
                 color: color
             });
         };
-        success = function(response) {
-            if (response == 'false') {
+        success = function(data) {
+            var response = $.parseJSON(data);
+            var response_status = response['status'];
+            if (response_status == 'success') {
                 $('.content').waitMe('hide');
 
                 swal({
-                    icon: "error",
-                    text: "Data terkirim namun tidak tersimpan dalam sistem.",
+                    icon: "success",
                 });
             } else {
                 $('.content').waitMe('hide');
 
                 swal({
-                    icon: "success",
+                    icon: "error",
+                    text: "Data terkirim namun tidak tersimpan dalam sistem.",
                 });
             };
         };

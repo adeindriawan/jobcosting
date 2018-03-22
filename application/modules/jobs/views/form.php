@@ -59,21 +59,7 @@
 											<div class="form-group">
 								                <select class="form-control show-tick daftar-item daftar1" data-width="100%" data-live-search="true" urut="1" name="item[]" mobile="true" id="item" required>
 				                                    <option selected="" value="">Pilih item</option>
-				                                    <optgroup label="Bahan Baku">
-					                                    <?php foreach ($bb as $value) { ?>
-					                                    	<option id="option<?php echo $value['id'] ?>" value="<?php echo $value['id'] ?>" harga="<?php echo $value['harga'] ?>"><?php echo $value['nama'] ?> || <?php echo $value['satuan'] ?></option>
-					                                    <?php } ?>
-					                                </optgroup>
-					                                <optgroup label="Tenaga Kerja Langsung">
-					                                    <?php foreach ($tkl as $value) { ?>
-					                                    	<option id="option<?php echo $value['id'] ?>" value="<?php echo $value['id'] ?>" harga="<?php echo $value['harga'] ?>"><?php echo $value['nama'] ?> || <?php echo $value['satuan'] ?></option>
-					                                    <?php } ?>
-					                                </optgroup>
-					                                <optgroup label="Overhead">
-					                                    <?php foreach ($ovr as $value) { ?>
-					                                    	<option id="option<?php echo $value['id'] ?>" value="<?php echo $value['id'] ?>" harga="<?php echo $value['harga'] ?>"><?php echo $value['nama'] ?> || <?php echo $value['satuan'] ?></option>
-					                                    <?php } ?>
-					                                </optgroup>
+				                                    
 				                                </select>
 								            </div>
 										</td>
