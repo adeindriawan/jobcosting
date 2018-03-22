@@ -45,25 +45,24 @@
 	                                <div class="input-group">
                                         <span class="input-group-addon">Rp</span>
                                         <div class="form-line">
-                                            <input type="text" class="form-control" name="nominal" id="nominal" placeholder="Nominal Transaksi* (tanpa titik dan desimal)" required>
+                                            <input type="text" class="form-control" name="nominal" readonly id="nominal" placeholder="Nominal Transaksi" required>
                                         </div>
                                     </div>
 	                            </div>
 	                        </div>
 
+                            <div class="row clearfix">
+                                <div class="form-group">
+                                    <select class="form-control show-tick" data-width="100%" data-live-search="true" name="jenis" mobile="true" id="jenis" required>
+                                        <option selected="" value="">Pilih jenis transaksi*</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div id="input"></div>
+
 	                        <h2 class="card-inside-title">Deskripsi Transaksi</h2>
 	                        <textarea id="ckeditor" class="deskripsi-transaksi"></textarea><br>
-
-	                        <div class="row clearfix">
-	                        	<div class="form-group">
-					                <select class="form-control show-tick" data-width="100%" data-live-search="true" name="jenis" mobile="true" id="jenis" required>
-	                                    <option selected="" value="">Pilih jenis transaksi*</option>
-	                                    <?php foreach ($jenis_transaksi as $value) { ?>
-	                                    	<option id="option<?php echo $value['id'] ?>" value="<?php echo $value['id'] ?>"><?php echo $value['jenis'] ?></option>
-	                                    <?php } ?>
-	                                </select>
-					            </div>
-	                        </div>
                         </form>
                     </div>
                 </div>

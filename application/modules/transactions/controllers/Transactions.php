@@ -7,6 +7,7 @@ class Transactions extends CI_Controller {
 	public function __construct()
 	{
 		parent::__construct();
+		$this->load->model('TransactionModel');
 
 		$this->head = [
 						'title' => 'Transactions',
@@ -83,6 +84,17 @@ class Transactions extends CI_Controller {
 		$this->load->view('form', $data);
 	}
 
+	public function transaction_categories()
+	{
+		$response['data'] = $this->db->get('jenis_transaksi')->result_array();
+		$response['code'] = 200;
+		$response['status'] = 'success';
+		$response['message'] = 'All transaction categories have been successfully fetched.';
+		$response['description'] = 'All transaction categories have been successfully fetched.';
+		$response = json_encode($response);
+		echo $response;
+	}
+
 	public function add()
 	{
 		$data['nama'] = $this->input->post('nama', TRUE);
@@ -128,6 +140,17 @@ class Transactions extends CI_Controller {
 		}
 
 		echo 'true';
+	}
+
+	public function accounts_of_a_transaction_category($id)
+	{
+		$response['data'] = $this->TransactionModel->getAccountsOfATransactionCategory($id);
+		$response['code'] = 200;
+		$response['status'] = 'success';
+		$response['message'] = 'All accounts from the transaction category have been fetched.';
+		$response['description'] = 'All accounts from the transaction category have been fetched.';
+		$response = json_encode($response);
+		echo $response;
 	}
 }
 
