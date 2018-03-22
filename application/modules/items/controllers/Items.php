@@ -119,10 +119,37 @@ class Items extends MX_Controller {
 
 	public function get()
 	{
-		$query = $this->db->get('item')->result_array();
-		$query = json_encode($query);
+		if ($this->input->get('length') == -1) {
+			$length = NULL;
+			$start = NULL;
+		} else {
+			$length = $this->input->get('length');
+			$start = $this->input->get('start');
+		}
+		if ($this->input->get('search[value]') == '') {
+			$search = '';
+		} else {
+			$search = $this->input->get('search[value]');
+		}
 
-		echo $query;
+		$this->db->select('id');
+		$this->db->from('item');
+		$response['recordsTotal'] = $this->db->count_all_results();
+
+		$this->db->select('id');
+		$this->db->from('item');
+		if ($search != '') {
+			$this->db->like('item.name', $search, 'both');
+		}
+		$response['recordsFiltered'] = $this->db->count_all_results();
+
+		$response['data'] = $this->ItemModel->joinWithAccounts($search, $length, $start);
+		$response['code'] = 200;
+		$response['status'] = 'success';
+		$response['message'] = 'All items data have been successfully fetched.';
+		$response['description'] = 'All items data have been successfully fetched.';
+		$response = json_encode($response);
+		echo $response;
 	}
 
 	public function filter()

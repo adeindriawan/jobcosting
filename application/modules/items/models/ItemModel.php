@@ -24,6 +24,20 @@ class ItemModel extends CI_Model {
 		return $query;
 	}
 
+	public function joinWithAccounts($search, $length, $start)
+	{
+		$this->db->select('i.*, a.nama AS nama_akun');
+		$this->db->from('item i');
+		if ($search != '') {
+			$this->db->like('i.nama', $search, 'both');
+			$this->db->or_like('a.nama', $search, 'both');
+		}
+		$this->db->join('akun a', 'i.akun = a.id', 'left');
+		$this->db->limit($length, $start);
+		$query = $this->db->get()->result_array();
+		return $query;
+	}
+
 }
 
 /* End of file ItemModel.php */
